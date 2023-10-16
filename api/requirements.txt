@@ -201,6 +201,7 @@ tqdm==4.57.0
 Twisted==22.1.0
 txaio==21.2.1
 u-msgpack-python==2.3.0
+ua-parser==0.18.0
 ubuntu-advantage-tools==8001
 ubuntu-drivers-common==0.0.0
 ufoLib2==0.13.1

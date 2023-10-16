@@ -27,7 +27,7 @@ def submit():
 	user_agent = request.user_agent
 	user_data["ip_address"] = request.remote_addr
 	user_data["platform"] = user_agent.platform #.capitalize()
-	user_data["browser"] = user_agent.browseri #.capitalize()
+	user_data["browser"] = user_agent.browser #.capitalize()
 
 	response = make_response(render_template("user_data.html", user_data=user_data))
 

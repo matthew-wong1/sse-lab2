@@ -24,10 +24,10 @@ def submit():
 	user_data["email"] = request.form.get("email") 
 
 	# data from request headers 
-	user_agent = request.user_agent
+	user_agent = request.headers.get('User-Agent')
 	user_data["ip_address"] = request.remote_addr
-	user_data["platform"] = user_agent.platform #.capitalize()
-	user_data["browser"] = user_agent.browser #.capitalize()
+	user_data["platform"] = user_agent #.capitalize()
+	user_data["browser"] = user_agent #.capitalize()
 
 	response = make_response(render_template("user_data.html", user_data=user_data))
 

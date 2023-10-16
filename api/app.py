@@ -14,7 +14,7 @@ def index():
 
 	return render_template("index.html")
 
-@app.route("/your_data", methods=["POST"])
+@app.route("/your-data", methods=["POST"])
 def submit():
 	# data from form 
 	user_data = {} 

@@ -1,5 +1,8 @@
 from flask import Flask, render_template, request, make_response
+from ua_parser import user_agent_parser 
+
 app = Flask(__name__)
+
 
 @app.route("/")
 def index():
@@ -24,10 +27,10 @@ def submit():
 	user_data["email"] = request.form.get("email") 
 
 	# data from request headers 
-	user_agent = request.headers.get('User-Agent')
+	user_agent_str = request.headers.get('User-Agent')
 	user_data["ip_address"] = request.remote_addr
-	user_data["platform"] = user_agent #.capitalize()
-	user_data["browser"] = user_agent #.capitalize()
+	user_data["platform"] = user_agent_parser.Parse(user_agent_str)['os']['family']
+	user_data["browser"] = user_agent_parser.Parse(user_agent_str)['user_agent']['family']
 
 	response = make_response(render_template("user_data.html", user_data=user_data))
 

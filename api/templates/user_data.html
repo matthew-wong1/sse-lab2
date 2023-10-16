@@ -1,8 +1,13 @@
 {% extends "layout.html" %} 
 
 {% block body %}
-<h1>Hello {{ name }}!</h1>
-<p>Name: {{ name }}</p>
-<p>Age: {{ age }}</p>
-<p>IP address: {{ ip_address }}</p>
+<div class="container w-50 pt-4 text-center">
+	<div class="mb-4">
+		<h1>Hello {{ user_data["name"] }}!</h1>
+	</div>
+	<p>Maybe you didn't realise that we know more information about you than you realised.</p>
+	<p>You may have also visited us before and we have saved this information in your cookies >:).</p>
+	<p>You are {{ user_data["age"] }} years old, your email is {{ user_data["email"] }} and your telephone is {{ user_data["tel"] }}</p>
+	<p>You are on {{ user_data["platform"] }} using {{ user_data["browser"] }} to view this page. Your IP address is {{ user_data["ip_address"] }}</p>
+	</div>
 {% endblock %}

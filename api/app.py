@@ -1,6 +1,5 @@
 from flask import Flask, render_template, request, make_response
 app = Flask(__name__)
-import sys
 
 @app.route("/")
 def index():
@@ -27,8 +26,8 @@ def submit():
 	# data from request headers 
 	user_agent = request.user_agent
 	user_data["ip_address"] = request.remote_addr
-	user_data["platform"] = user_agent.platform.capitalize()
-	user_data["browser"] = user_agent.browser.capitalize()
+	user_data["platform"] = user_agent.platform #.capitalize()
+	user_data["browser"] = user_agent.browseri #.capitalize()
 
 	response = make_response(render_template("user_data.html", user_data=user_data))
 
@@ -39,10 +38,4 @@ def submit():
 
 	return response
 
-#Use cookies, dynamic forms. if c ookie value not empty, display form 
-#Name, age (check that it is a number), UK number, make sure is ic.ac.uk email
-#Your IP address is... 
-#MAc address 
-#(Maybe) what machine you are on 
-#port number 
 

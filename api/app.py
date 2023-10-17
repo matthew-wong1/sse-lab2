@@ -3,16 +3,19 @@ from ua_parser import user_agent_parser
 
 app = Flask(__name__)
 
-def checkAge(age):
+def check_name(name):
+	return name.isalpha()
+
+def check_age(age):
 	return age.isnumeric() 
 
-def checkTel(tel):
+def check_tel(tel):
 	if len(tel) == 10 and tel.isnumeric():
 		return True
 
 	return False
 
-def checkEmail(email): 
+def check_email(email): 
 	domain = email.split("@",1)[1]
 
 	if domain == "ic.ac.uk":
@@ -43,8 +46,11 @@ def submit():
 	user_data["tel"] = request.form.get("tel")
 	user_data["email"] = request.form.get("email") 
 
-	# form validation
-	if (not(checkAge(user_data['age']) and checkTel(user_data['tel']) and checkEmail(user_data['email']))):
+	name_is_valid = check_name(user_data['name'])
+	age_is_valid = check_age(user_data['age'])
+	tel_is_valid = check_tel(user_data['tel'])
+	email_is_valid = check_email(user_data['email'])
+	if (not(name_is_valid and age_is_valid and tel_is_valid and email_is_valid)):
 		return redirect('/error')
 
 	# data from request headers 

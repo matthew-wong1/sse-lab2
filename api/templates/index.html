@@ -9,22 +9,22 @@
 	<form action="/your-data" method="post">
 		<div class="mb-4">
 			<label for="namefield" class="form-label">Name:</label>
-			<input type="text" id="namefield" class="form-control"  name="name">
+			<input type="text" id="namefield" class="form-control"  name="name" required>
 		</div>
 		
 		<div class="mb-4">
 			<label for="agefield" class="form-label">Age:</label>
-			<input type="number" id="agefield" class="form-control" name="age">
+			<input type="number" id="agefield" class="form-control" name="age" required>
 		</div>
 
 		<div class="mb-4">
-			<label for="ukphone" class="form-label">UK Tel Number:</label>
-			<input type="tel" id="tel" class="form-control" name="tel">
+			<label for="ukphone" class="form-label">UK Tel Number (10 digits):</label>
+			<input type="tel" id="tel" class="form-control" name="tel" required pattern="[0-9]{10}">
 		</div>
 
 		<div class="mb-4">
 			<label for="email" class="form-label">Imperial email (ending in .ic.ac.uk):</label>
-			<input type="email" id="email" class="form-control"  name="email">
+			<input type="email" id="email" class="form-control"  name="email" required pattern=".+@ic\.ac\.uk">
 		</div>
 
 		<button type="submit" class="btn btn-primary">Submit</button>

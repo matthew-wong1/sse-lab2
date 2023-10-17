@@ -45,8 +45,8 @@ def submit():
 
 @app.route("/clear-cookies", methods=["POST"])
 def clear_cookies():
-	response = make_response(render_template(index.html))
+	response = make_response(render_template("index.html"))
 	for cookie in request.cookies:
 		response.set_cookie(cookie, expires=0)
-		return response; 
+	return response; 
 

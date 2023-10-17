@@ -44,7 +44,7 @@ def submit():
 	user_data["email"] = request.form.get("email") 
 
 	# form validation
-	if (not(checkAge(age) and checkTel(tel) and checkEmail(email))):
+	if (not(checkAge(user_data['age']) and checkTel(user_data['tel']) and checkEmail(user_data['email']))):
 		return redirect('/error')
 
 	# data from request headers 

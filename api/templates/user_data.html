@@ -5,9 +5,12 @@
 	<div class="mb-4">
 		<h1>Hello {{ user_data["name"] }}!</h1>
 	</div>
-	<p>Maybe you didn't realise that we know more information about you than you realised.</p>
-	<p>You may have also visited us before and we have saved this information in your cookies >:).</p>
-	<p>You are {{ user_data["age"] }} years old, your email is {{ user_data["email"] }} and your telephone is {{ user_data["tel"] }}</p>
-	<p>You are on {{ user_data["platform"] }} using {{ user_data["browser"] }} to view this page. Your IP address is {{ user_data["ip_address"] }}</p>
+		<p>Maybe you didn't realise that we know more information about you than you realised.</p>
+		<p>You may have also visited us before and we have saved this information in your cookies >:).</p>
+		<p>You are {{ user_data["age"] }} years old, your email is {{ user_data["email"] }} and your telephone is {{ user_data["tel"] }}</p>
+		<p>You are on {{ user_data["platform"] }} using {{ user_data["browser"] }} to view this page. Your IP address is {{ user_data["ip_address"] }}</p>
+		<form action="/clear-cookies" method="post">
+			<button type="submit" class="btn btn-danger">Clear cookies</button>
+		</form>
 	</div>
 {% endblock %}

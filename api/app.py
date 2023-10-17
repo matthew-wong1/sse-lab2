@@ -3,7 +3,6 @@ from ua_parser import user_agent_parser
 
 app = Flask(__name__)
 
-
 @app.route("/")
 def index():
 	# Return user data page if cookies are set 
@@ -26,6 +25,9 @@ def submit():
 	user_data["tel"] = request.form.get("tel")
 	user_data["email"] = request.form.get("email") 
 
+	# form validation
+#	if (user_data["tel"].
+
 	# data from request headers 
 	user_agent_str = request.headers.get('User-Agent')
 	user_data["ip_address"] = request.remote_addr
@@ -41,4 +43,10 @@ def submit():
 
 	return response
 
+@app.route("/clear-cookies", methods=["POST"])
+def clear_cookies():
+	response = make_response(render_template(index.html))
+	for cookie in request.cookies:
+		response.set_cookie(cookie, expires=0)
+		return response; 
 

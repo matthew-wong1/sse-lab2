@@ -3,6 +3,24 @@ from ua_parser import user_agent_parser
 
 app = Flask(__name__)
 
+def checkAge(age):
+	return age.isnumeric() 
+
+def checkTel(tel):
+	if len(tel) == 10 and tel.isnumeric():
+		return True
+
+	return False
+
+def checkEmail(email): 
+	domain = email.split("@",1)[1]
+
+	if domain == "ic.ac.uk":
+		return True
+	
+	return False
+
+
 @app.route("/")
 def index():
 	# Return user data page if cookies are set 
@@ -26,7 +44,8 @@ def submit():
 	user_data["email"] = request.form.get("email") 
 
 	# form validation
-#	if (user_data["tel"].
+	if (not(checkAge(age) and checkTel(tel) and checkEmail(email))):
+		return redirect('/error')
 
 	# data from request headers 
 	user_agent_str = request.headers.get('User-Agent')
@@ -50,3 +69,6 @@ def clear_cookies():
 		response.set_cookie(cookie, expires=0)
 	return response; 
 
+@app.route("/error", methods=["GET"])
+def error():
+	return render_template("error.html")

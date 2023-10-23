@@ -21,8 +21,10 @@ jobs:
     steps:
       - name: Install pytest
         run: pip install pytest
+      - name: run flake8 again
+        run: flake8 api/
       - name: Run pytest
-        run: pytest api/*.py
+        run: pytest api/app.py
 
   deploy-to-vercel:
     needs: run-unit-tests

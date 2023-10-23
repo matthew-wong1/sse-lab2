@@ -3,6 +3,11 @@ from ua_parser import user_agent_parser
 
 app = Flask(__name__)
 
+def process_query(input_string):
+    if input_string == "dinosaurs":
+        return "Dinosaurs ruled the Earth 200 million years ago"
+    else:
+        return "Unknown"
 
 def check_name(name):
     return name.isalpha()
@@ -90,3 +95,9 @@ def clear_cookies():
 @app.route("/error", methods=["GET"])
 def error():
     return render_template("error.html")
+
+
+@app.route("/query", methods=["GET"])
+def query():
+    q = request.args.get('q')
+    return process_query(q)

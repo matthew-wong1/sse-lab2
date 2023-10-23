@@ -15,8 +15,17 @@ jobs:
       - name: Run flake8
         run: flake8 api/
 
-  deploy-to-vercel:
+  run-unit-tests:
     needs: python-formatting
+    runs-on: ubuntu-latest
+      steps:
+        - name: Install pytest
+          run: pip install pytest
+        - name: Run pytest
+          run: pytest api/*.py
+
+  deploy-to-vercel:
+    needs: run-unit-tests
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -28,3 +37,4 @@ jobs:
           vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
           vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
           vercel-args: '--prod'
+

@@ -29,7 +29,7 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
       - name: Run pytest
-        run: pytest api/app.py
+        run: pytest api/*.py
 
   deploy-to-vercel:
     needs: run-unit-tests

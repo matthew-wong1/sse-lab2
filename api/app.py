@@ -66,7 +66,8 @@ def submit():
     user_data["ip_address"] = request.remote_addr
     user_data["platform"] = \
         user_agent_parser.Parse(user_agent_str)["os"]["family"]
-    user_data["browser"] = user_agent_parser.Parse(user_agent_str)["user_agent"]["family"]
+    user_data["browser"] = \
+        user_agent_parser.Parse(user_agent_str)["user_agent"]["family"]
 
     response = \
         make_response(render_template("user_data.html", user_data=user_data))

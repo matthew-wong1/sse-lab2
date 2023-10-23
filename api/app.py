@@ -3,11 +3,13 @@ from ua_parser import user_agent_parser
 
 app = Flask(__name__)
 
+
 def process_query(input_string):
     if input_string == "dinosaurs":
         return "Dinosaurs ruled the Earth 200 million years ago"
     else:
         return "Unknown"
+
 
 def check_name(name):
     return name.isalpha()

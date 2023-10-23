@@ -18,11 +18,11 @@ jobs:
   run-unit-tests:
     needs: python-formatting
     runs-on: ubuntu-latest
-      steps:
-        - name: Install pytest
-          run: pip install pytest
-        - name: Run pytest
-          run: pytest api/*.py
+    steps:
+      - name: Install pytest
+        run: pip install pytest
+      - name: Run pytest
+        run: pytest api/*.py
 
   deploy-to-vercel:
     needs: run-unit-tests

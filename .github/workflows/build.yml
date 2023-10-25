@@ -40,7 +40,7 @@ jobs:
         run: pytest api/*.py
 
   check-unit-test-coverage:
-    needs: python-formatting
+    needs: run-unit-tests
     runs-on: ubuntu-latest
     steps:
       - name: Checkout

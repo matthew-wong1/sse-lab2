@@ -18,7 +18,7 @@ jobs:
         run: flake8 api/
 
       - name: Run autoflake to remove unused imports
-          run: autoflake -i --remove-all-unused-imports api/*.py
+        run: autoflake -i --remove-all-unused-imports api/*.py
 
       - name: Run isort to check ordering of imports
         run: isort --check -diff api/

@@ -10,10 +10,18 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: 3.9
-      - name: Install flake8
-        run: pip install flake8
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
       - name: Run flake8
         run: flake8 api/
+
+      - name: Run autoflake to remove unused imports
+          run: autoflake -i --remove-all-unused-imports api/*.py
+
+      - name: Run isort to check ordering of imports
+        run: isort --check -diff api/
 
   run-unit-tests:
     needs: python-formatting
@@ -30,6 +38,24 @@ jobs:
         run: pip install -r requirements.txt
       - name: Run pytest
         run: pytest api/*.py
+
+  check-unit-test-coverage:
+    needs: python-formatting
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.9
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+      - name: Run coverage to check unit test coverage
+        run: |
+          coverage run -m pytest api/
+          coverage report
 
   deploy-to-vercel:
     needs: run-unit-tests

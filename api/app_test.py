@@ -1,5 +1,5 @@
-from app import process_query, check_name, check_age, check_tel, check_email
 import pytest
+from app import check_age, check_email, check_name, check_tel, process_query
 
 
 def test_knows_about_dinosaurs():

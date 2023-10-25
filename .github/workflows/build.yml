@@ -58,7 +58,7 @@ jobs:
           coverage report
 
   deploy-to-vercel:
-    needs: run-unit-tests
+    needs: check-unit-test-coverage
     runs-on: ubuntu-latest
     steps:
       - name: Checkout

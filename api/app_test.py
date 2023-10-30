@@ -30,7 +30,7 @@ def test_mult():
 
 def test_is_sq_and_cube():
     assert process_query(
-        "square and cube: 2696, 4096, 441") == "4096"
+        "square and cube: 64, 3626, 1254, 1, 36, 2095, 3933") == "[64, 1]"
 
 
 def test_subtract():

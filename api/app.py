@@ -26,13 +26,15 @@ def process_query(input_string):
     elif "square" in input_string:
         num_list = re.findall(r'\d+', input_string)
         results = list(map(int, num_list))
+        answers = []
         for result in results:
             cube_root = result**(1./3.)
             sqrt = result**(1/2)
             rounded_cube = round(cube_root)**3
             rounded_sqrt = round(sqrt)**2
             if result == rounded_cube and result == rounded_sqrt:
-                return str(result)
+                answers.append(result)
+        return str(answers)
     elif "minus" in input_string:
         num_list = re.findall(r'\d+', input_string)
         results = list(map(int, num_list))

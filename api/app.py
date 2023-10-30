@@ -1,6 +1,5 @@
 import re
 
-import numpy
 from flask import Flask, make_response, redirect, render_template, request
 from ua_parser import user_agent_parser
 
@@ -22,8 +21,14 @@ def process_query(input_string):
         return str(sum(result))
     elif "mult" in input_string:
         num_list = re.findall(r'\d+', input_string)
-        result = list(map(int, num_list))
-        return str(numpy.prod(result))
+        results = list(map(int, num_list))
+        return str(results[0] * results[1])
+
+    elif "cube" in input_string:
+        num_list = re.findall(r'\d+', input_string)
+        results = list(map(int, num_list))
+        for result in results:
+            cube_root =
     else:
         return "Unknown"
 

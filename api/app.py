@@ -1,6 +1,6 @@
-import numpy
 import re
 
+import numpy
 from flask import Flask, make_response, redirect, render_template, request
 from ua_parser import user_agent_parser
 

@@ -12,3 +12,4 @@ flake8==6.1.0
 isort==5.12.0
 autoflake==2.2.1
 coverage==7.3.2
+numpy==1.26.1

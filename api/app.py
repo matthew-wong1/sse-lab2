@@ -1,5 +1,6 @@
-from flask import Flask, make_response, redirect, render_template, request
 import re
+
+from flask import Flask, make_response, redirect, render_template, request
 from ua_parser import user_agent_parser
 
 app = Flask(__name__)

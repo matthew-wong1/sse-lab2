@@ -14,11 +14,11 @@ def process_query(input_string):
     elif "largest" in input_string:
         num_list = re.findall(r'\d+', input_string)
         result = list(map(int, num_list))
-        return max(result)
+        return str(max(result))
     elif "plus" in input_string:
         num_list = re.findall(r'\d+', input_string)
         result = list(map(int, num_list))
-        return sum(result)
+        return str(sum(result))
     else:
         return "Unknown"
 

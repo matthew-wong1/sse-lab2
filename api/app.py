@@ -34,7 +34,10 @@ def process_query(input_string):
             rounded_sqrt = round(sqrt)**2
             if result == rounded_cube and result == rounded_sqrt:
                 answers.append(result)
-        return str(answers)
+        if len(answers) == 1:
+            return str(answers[0])
+        else:
+            return str(answers)
     elif "minus" in input_string:
         num_list = re.findall(r'\d+', input_string)
         results = list(map(int, num_list))

@@ -7,6 +7,8 @@ app = Flask(__name__)
 def process_query(input_string):
     if input_string == "dinosaurs":
         return "Dinosaurs ruled the Earth 200 million years ago"
+    elif "name" in input_string:
+        return "itsarainyday"
     else:
         return "Unknown"
 

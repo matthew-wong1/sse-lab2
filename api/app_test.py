@@ -11,6 +11,10 @@ def test_does_not_know_about_asteroids():
     assert process_query("asteroids") == "Unknown"
 
 
+def test_knows_name():
+    assert process_query("What is your name?") == "itsarainyday"
+
+
 @pytest.mark.parametrize("test_input,expected",
                          [("Matthew", True),
                           ("M@tthew", False),

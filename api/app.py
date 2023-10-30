@@ -23,6 +23,16 @@ def process_query(input_string):
         num_list = re.findall(r'\d+', input_string)
         results = list(map(int, num_list))
         return str(results[0] * results[1])
+    elif "square" in input_string:
+        num_list = re.findall(r'\d+', input_string)
+        results = list(map(int, num_list))
+        for result in results:
+            cube_root = result**(1./3.)
+            sqrt = result**(1/2)
+            rounded_cube = round(cube_root)**3
+            rounded_sqrt = round(sqrt)**2
+            if result == rounded_cube and result == rounded_sqrt:
+                return str(result)
     else:
         return "Unknown"
 

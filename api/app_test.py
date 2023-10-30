@@ -27,11 +27,13 @@ def test_sum():
 def test_mult():
     assert process_query("What is 88 multiplied by 45") == "3960"
 
+
 """
 def test_is_sq_and_cube():
     assert process_query(
         "square and cube: 2696, 1, 441") == "1"
 """
+
 
 @pytest.mark.parametrize("test_input,expected",
                          [("Matthew", True),

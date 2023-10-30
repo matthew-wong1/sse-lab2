@@ -1,4 +1,5 @@
 from flask import Flask, make_response, redirect, render_template, request
+import re
 from ua_parser import user_agent_parser
 
 app = Flask(__name__)
@@ -9,6 +10,10 @@ def process_query(input_string):
         return "Dinosaurs ruled the Earth 200 million years ago"
     elif "name" in input_string:
         return "itsarainyday"
+    elif "largest" in input_string:
+        num_list = re.findall(r'\d+', input_string)
+        result = list(map(int, num_list))
+        return max(result)
     else:
         return "Unknown"
 

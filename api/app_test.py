@@ -15,7 +15,13 @@ def test_knows_name():
     assert process_query("What is your name?") == "itsarainyday"
 
 def test_which_of_the_following():
-    assert process_query("Which of the following numbers is the largest: 40, 29, 49?") == 49
+    assert process_query(
+        "Which of the following numbers is the largest: 40, 29, 49?") == 49
+
+
+def test_sum():
+    assert process_query("What is 57 plus 55") == 112
+
 
 @pytest.mark.parametrize("test_input,expected",
                          [("Matthew", True),

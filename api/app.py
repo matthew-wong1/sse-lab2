@@ -14,6 +14,10 @@ def process_query(input_string):
         num_list = re.findall(r'\d+', input_string)
         result = list(map(int, num_list))
         return max(result)
+    elif "plus" in input_string:
+        num_list = re.findall(r'\d+', input_string)
+        result = list(map(int, num_list))
+        return sum(result)
     else:
         return "Unknown"
 

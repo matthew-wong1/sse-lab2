@@ -37,7 +37,9 @@ def process_query(input_string):
         if len(answers) == 1:
             return str(answers[0])
         else:
-            return str(answers)
+            final_answer = str(answers).replace('[', '')
+            final_answer = final_answer.replace(']', '')
+            return final_answer
     elif "minus" in input_string:
         num_list = re.findall(r'\d+', input_string)
         results = list(map(int, num_list))

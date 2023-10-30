@@ -23,11 +23,6 @@ def process_query(input_string):
         num_list = re.findall(r'\d+', input_string)
         results = list(map(int, num_list))
         return str(results[0] * results[1])
-    elif "cube" in input_string:
-        num_list = re.findall(r'\d+', input_string)
-        results = list(map(int, num_list))
-        for result in results:
-            cube_root = result**(1/3)
     else:
         return "Unknown"
 

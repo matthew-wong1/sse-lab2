@@ -33,6 +33,24 @@ def process_query(input_string):
             rounded_sqrt = round(sqrt)**2
             if result == rounded_cube and result == rounded_sqrt:
                 return str(result)
+    elif "minus" in input_string:
+        num_list = re.findall(r'\d+', input_string)
+        results = list(map(int, num_list))
+        return str(results[0] - results[1])
+    elif "primes" in input_string:
+        num_list = re.findall(r'\d+', input_string)
+        results = list(map(int, num_list))
+        answers = []
+        for result in results:
+            if result == 1:
+                continue
+            for i in range(2, int(result/2)+1):
+                if result % i == 0:
+                    break
+            else:
+                answers.append(result)
+
+        return str(answers)
     else:
         return "Unknown"
 

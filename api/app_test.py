@@ -33,6 +33,14 @@ def test_is_sq_and_cube():
         "square and cube: 2696, 4096, 441") == "4096"
 
 
+def test_subtract():
+    assert process_query("75 minus 30") == "45"
+
+
+def test_is_prime():
+    assert process_query("primes: 55, 85, 97, 5, 12") == "[97, 5]"
+
+
 @pytest.mark.parametrize("test_input,expected",
                          [("Matthew", True),
                           ("M@tthew", False),

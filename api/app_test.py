@@ -14,6 +14,7 @@ def test_does_not_know_about_asteroids():
 def test_knows_name():
     assert process_query("What is your name?") == "itsarainyday"
 
+
 def test_which_of_the_following():
     assert process_query(
         "Which of the following numbers is the largest: 40, 29, 49?") == 49

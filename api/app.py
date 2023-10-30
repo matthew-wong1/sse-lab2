@@ -23,8 +23,6 @@ def process_query(input_string):
         num_list = re.findall(r'\d+', input_string)
         results = list(map(int, num_list))
         return str(results[0] * results[1])
-
-
     else:
         return "Unknown"
 

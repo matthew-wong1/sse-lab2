@@ -1,3 +1,4 @@
+import numpy
 import re
 
 from flask import Flask, make_response, redirect, render_template, request
@@ -19,6 +20,10 @@ def process_query(input_string):
         num_list = re.findall(r'\d+', input_string)
         result = list(map(int, num_list))
         return str(sum(result))
+    elif "mult" in input_string:
+        num_list = re.findall(r'\d+', input_string)
+        result = list(map(int, num_list))
+        return str(numpy.prod(result))
     else:
         return "Unknown"
 

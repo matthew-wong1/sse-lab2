@@ -24,6 +24,10 @@ def test_sum():
     assert process_query("What is 57 plus 55") == "112"
 
 
+def test_mult():
+    assert process_query("What is 88 multiplied by 45") == "3960"
+
+
 @pytest.mark.parametrize("test_input,expected",
                          [("Matthew", True),
                           ("M@tthew", False),

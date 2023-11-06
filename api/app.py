@@ -1,6 +1,7 @@
 import re
 import requests
-
+from pydantic import BaseModel
+from datetime import datetime
 from flask import Flask, make_response, redirect, render_template, request
 from ua_parser import user_agent_parser
 
@@ -168,10 +169,54 @@ def github():
                 "direction":"desc"
             }
             response = requests.get(url, params=query_parameters)
-            if response.status_code == 200:
-                repos = response.json()  # data returned is a list of ‘repository’ entities
+            data = response.json()  # data returned is a list of ‘repository’ entities
+            info_list = []
+            repo_urls = []
+            repos_list = []
+            for i in data:
+                temp_dict = dict((key, i[key]) for key in ('name', 'created_at','html_url','updated_at','visibility','forks','watchers'))
+                temp_dict["repo_name"] = temp_dict.pop("name")
+                info_list.append(temp_dict)
+                repo_urls.append("https://api.github.com/repos/{username}/".format(username=username)+i["name"] + "/commits")
+            for repo_url in repo_urls:
+                data_temp = requests.get(repo_url).json()
+                try: 
+                    commit = data_temp[0]
+                    commit_details = commit["commit"]["committer"]
+                    temp_dict = dict((key, commit_details[key]) for key in ('name','date'))
+                    temp_dict["sha"] = commit["sha"]
+                    temp_dict['message'] = commit["commit"]["message"]
+                    repos_list.append(temp_dict)
+                except: 
+                    repos_list.append({"name": "",
+                                        "date": "1990-01-01T00:00:00Z",
+                                        "message": "",
+                                        "sha": ""})
+                    continue 
+            
+                combined_list = []
+                for dict1, dict2 in zip(info_list,repos_list):
+                    combined_list.append({**dict1, **dict2})
+                
+                class Repo(BaseModel):
+                    created_at: datetime
+                    html_url: str
+                    updated_at: datetime
+                    visibility: str 
+                    forks: int 
+                    watchers: int 
+                    repo_name: str 
+                    name: str
+                    date: datetime 
+                    message: str 
+                    sha: str 
 
-            return render_template("githubresponse.html", repos=repos)
+                class_list = []
+                for i in combined_list:
+                    repo = Repo(**i)
+                    class_list.append(repo)
+
+            return render_template("githubresponse.html", username = username, repos=class_list)
 
         elif 'findIssue' in request.form:
             keyword = request.form.get("keyword")

@@ -1,9 +1,9 @@
 {% extends "layout.html" %}
 
 {% block body %}
-<div class="container w-50 pt-4 text-center">
+<div class="container w-100 pt-4 text-center">
 	<div class="mb-4">
-		<h1>Hello {{ repos }}!</h1>
+		<h1>Hello {{ username }}!</h1>
 	</div>
 	<div>
 		<table class="table">
@@ -26,7 +26,21 @@
 				</tr>
 			</thead>
 			<tbody>
-				{{ repos }}
+			{% for repo in repos %}
+				<tr>
+					
+					<td><a href = {{repo.html_url}}>{{repo.repo_name}}</a></td>
+					<td>{{repo.created_at}}</td>
+					<td>{{repo.updated_at}}</td>
+					<td>{{repo.visibility}}</td>
+					<td>{{repo.forks}}</td>
+					<td>{{repo.watchers}}</td>
+					<td>{{repo.sha}}</td>
+					<td>{{repo.name}}</td>
+					<td>{{repo.date}}</td>
+					<td>{{repo.message}}</td>
+				</tr>
+			{% endfor %}
 			</tbody>
 		</table>
 

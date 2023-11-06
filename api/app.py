@@ -1,4 +1,5 @@
 import re
+import requests
 
 from flask import Flask, make_response, redirect, render_template, request
 from ua_parser import user_agent_parser
@@ -154,3 +155,34 @@ def error():
 def query():
     q = request.args.get('q')
     return process_query(q)
+
+
+@app.route("/github", methods=["GET", "POST"])
+def github():
+    if request.method == "POST":
+        if 'findUser' in request.form:
+            username = request.form.get("username")
+            url = "https://api.github.com/users/{username}/repos".format(username = username)
+            query_parameters = {
+                "sort":"updated",
+                "direction":"desc"
+            }
+            response = requests.get(url, params=query_parameters)
+            if response.status_code == 200:
+                repos = response.json()  # data returned is a list of ‘repository’ entities
+
+            return render_template("githubresponse.html", repos=repos)
+
+        elif 'findIssue' in request.form:
+            keyword = request.form.get("keyword")
+            if (keyword):
+                keyword += "+"
+            language = request.form.get("language")
+            url = "https://api.github.com/search/issues?q={keyword}language:{language}+archived:false+state:open+no:assignee+is:public+label:bug".format(keyword=keyword, language=language)
+            print(url)
+            response = requests.get(url)
+            if response.status_code == 200:
+                issues = response.json()
+            return render_template("randomissue.html", issues=issues)
+    else:
+        return render_template("github.html")

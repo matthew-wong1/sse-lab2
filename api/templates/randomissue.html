@@ -1,0 +1,11 @@
+{% extends "layout.html" %}
+
+{% block body %}
+<div class="container w-50 pt-4 text-center">
+	<div class="mb-4">
+		<h1>Hello {{ repos }}!</h1>
+	</div>
+	{{ issues }}
+
+	<a href="/github">Find other issues</a>
+{% endblock %}

@@ -1,0 +1,39 @@
+{% extends "layout.html" %}
+
+{% block body %}
+<div class="container w-50 pt-4">
+	<div class ="mb-4">
+		<h2 class="text-center">Please enter your GitHub username to find all your repositories!</h2>
+	</div>
+
+	<form action="/github" method="post" class="mb-5">
+		<div class="mb-4">
+			<label for="username-field" class="form-label">Username:</label>
+			<input type="text" id="username-field" class="form-control"  name="username" required>
+		</div>
+
+		<button type="submit" class="btn btn-primary" name="findUser" id="findUser">Submit</button>
+	</form>
+
+	<div class="mb-4 mt-5">
+		<h2 class="text-center">Bored instead? Find a random issue on GitHub to work on!</h2>
+	</div>
+
+	<form action="/github" method="post">
+		<div class="mb-4">
+			<label for="keyword-field" class="keyword-label">Keyword (optional)</label>
+			<input type="text" id="keyword-field" class="form-control" name="keyword">
+		</div>
+		<div class="mb-4">
+			<label for="keyword-field" class="keyword-label">Language</label>
+			<select class="form-select" aria-label="language" id="language-field" name="language" required>
+			  <option value="c">C</option>
+			  <option value="c++">C++</option>
+			  <option value="c#">C#</option>
+			</select>
+		</div>
+
+		<button type="submit" class="btn btn-primary" name="findIssue" id="findIssue">Submit</button>
+	</form>
+</div>
+{% endblock %}

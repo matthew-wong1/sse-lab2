@@ -3,9 +3,29 @@
 {% block body %}
 <div class="container w-50 pt-4 text-center">
 	<div class="mb-4">
-		<h1>Hello {{ repos }}!</h1>
+		<h1>Here is your random bug:</h1>
 	</div>
-	{{ issues }}
 
-	<a href="/github">Find other issues</a>
+	<table class="table">
+		<thead>
+			<th scope="col">Repository</th>
+			<th scope="col">Repo Description</th>
+			<th scope="col">Issue</th>
+			<th scope="col">Issue Creation Date</th>
+			<th scope="col">Issue Last Updated Date</th>
+		</thead>
+
+		<tbody>
+			<tr>
+				<td><a href={{rand_issue.svn_url}}>{{rand_issue.name}}</a></td>
+				<td>{{rand_issue.description}}</td>
+				<td><a href={{rand_issue.html_url}}>{{rand_issue.title}}</a></td>
+				<td>{{rand_issue.created_at}}</td>
+				<td>{{rand_issue.updated_at}}</td>
+			</tr>
+		</tbody>
+	</table>
+
+
+	<a href="/github">Go back</a>
 {% endblock %}

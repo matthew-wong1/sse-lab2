@@ -1,5 +1,7 @@
 import re
 import requests
+import random
+
 from pydantic import BaseModel
 from datetime import datetime
 from flask import Flask, make_response, redirect, render_template, request
@@ -161,76 +163,105 @@ def query():
 @app.route("/github", methods=["GET", "POST"])
 def github():
     if request.method == "POST":
-        try:
-            if 'findUser' in request.form:
-                username = request.form.get("username")
-                url = "https://api.github.com/users/{username}/repos".format(username = username)
-                query_parameters = {
-                    "sort":"updated",
-                    "direction":"desc"
-                }
-                response = requests.get(url, params=query_parameters)
-                data = response.json()  # data returned is a list of ‘repository’ entities
-                info_list = []
-                repo_urls = []
-                repos_list = []
-                for i in data:
-                    temp_dict = dict((key, i[key]) for key in ('name', 'created_at','html_url','updated_at','visibility','forks','watchers'))
-                    temp_dict["repo_name"] = temp_dict.pop("name")
-                    info_list.append(temp_dict)
-                    repo_urls.append("https://api.github.com/repos/{username}/".format(username=username)+i["name"] + "/commits")
-                for repo_url in repo_urls:
-                    data_temp = requests.get(repo_url).json()
-                    try: 
-                        commit = data_temp[0]
-                        commit_details = commit["commit"]["committer"]
-                        temp_dict = dict((key, commit_details[key]) for key in ('name','date'))
-                        temp_dict["sha"] = commit["sha"]
-                        temp_dict['message'] = commit["commit"]["message"]
-                        repos_list.append(temp_dict)
-                    except: 
-                        repos_list.append({"name": "",
-                                            "date": "1990-01-01T00:00:00Z",
-                                            "message": "",
-                                            "sha": ""})
-                        continue 
-                
-                    combined_list = []
-                    for dict1, dict2 in zip(info_list,repos_list):
-                        combined_list.append({**dict1, **dict2})
-                    
-                    class Repo(BaseModel):
-                        created_at: datetime
-                        html_url: str
-                        updated_at: datetime
-                        visibility: str 
-                        forks: int 
-                        watchers: int 
-                        repo_name: str 
-                        name: str
-                        date: datetime 
-                        message: str 
-                        sha: str 
+        if 'findUser' in request.form:
+            username = request.form.get("username")
+            url = "https://api.github.com/users/{username}/repos".format(username = username)
+            query_parameters = {
+                "sort":"updated",
+                "direction":"desc",
+                "per_page" : 100
+            }
+            response = requests.get(url, params=query_parameters)
+            data = response.json()  # data returned is a list of ‘repository’ entities
+            info_list = []
+            repo_urls = []
+            repos_list = []
+            for i in data:
+                temp_dict = dict((key, i[key]) for key in ('name', 'created_at','html_url','updated_at','visibility','forks','watchers'))
+                temp_dict["repo_name"] = temp_dict.pop("name")
+                info_list.append(temp_dict)
+                repo_urls.append("https://api.github.com/repos/{username}/".format(username=username)+i["name"] + "/commits")
+            for repo_url in repo_urls:
+                data_temp = requests.get(repo_url).json()
+                try:
+                    commit = data_temp[0]
+                    commit_details = commit["commit"]["committer"]
+                    temp_dict = dict((key, commit_details[key]) for key in ('name','date'))
+                    temp_dict["sha"] = commit["sha"]
+                    temp_dict['message'] = commit["commit"]["message"]
+                    repos_list.append(temp_dict)
+                except:
+                    repos_list.append({"name": "",
+                                        "date": "1990-01-01T00:00:00Z",
+                                        "message": "",
+                                        "sha": ""})
+                    continue
 
-                    class_list = []
-                    for i in combined_list:
-                        repo = Repo(**i)
-                        class_list.append(repo)
+                combined_list = []
+                for dict1, dict2 in zip(info_list,repos_list):
+                    combined_list.append({**dict1, **dict2})
 
-                return render_template("githubresponse.html", username = username, repos=class_list)
-  
-            elif 'findIssue' in request.form:
-                keyword = request.form.get("keyword")
-                if (keyword):
-                    keyword += "+"
-                language = request.form.get("language")
-                url = "https://api.github.com/search/issues?q={keyword}language:{language}+archived:false+state:open+no:assignee+is:public+label:bug".format(keyword=keyword, language=language)
-                print(url)
-                response = requests.get(url)
-                if response.status_code == 200:
-                    issues = response.json()
-                return render_template("randomissue.html", issues=issues)
-        except:
-            return render_template("errorgithub.html")
+                class Repo(BaseModel):
+                    created_at: datetime
+                    html_url: str
+                    updated_at: datetime
+                    visibility: str
+                    forks: int
+                    watchers: int
+                    repo_name: str
+                    name: str
+                    date: datetime
+                    message: str
+                    sha: str
+
+                class_list = []
+                for i in combined_list:
+                    repo = Repo(**i)
+                    class_list.append(repo)
+
+            return render_template("githubresponse.html", username = username, repos=class_list)
+
+        elif 'findIssue' in request.form:
+
+            class Issue(BaseModel):
+                html_url: str
+                title: str
+                updated_at: datetime
+                created_at: datetime
+                name: str
+                description: str
+                svn_url: str
+
+            keyword = request.form.get("keyword")
+            if (keyword):
+                keyword += "+"
+            language = request.form.get("language")
+            url = "https://api.github.com/search/issues?q={keyword}language:{language}+archived:false+state:open+no:assignee+is:public+label:bug&per_page=100".format(keyword=keyword, language=language)
+            print(url)
+            response = requests.get(url)
+            if response.status_code == 200:
+                data_issues = response.json()
+
+            issue_count = data_issues['total_count']
+            rand_index = random.randint(0, issue_count - 1)
+            # calculate which page rand_index is on
+            page_number = rand_index // 100 #floor division
+            page_index = rand_index % 100
+
+            url += "&page={page_number}".format(page_number=page_number)
+            rand_issue = data_issues['items'][page_index]
+
+            temp_dict = dict((key, rand_issue[key]) for key in ('html_url', 'repository_url', 'title', 'updated_at', 'created_at'))
+            data_repo_response = requests.get(temp_dict['repository_url'])
+            if data_repo_response.status_code == 200:
+                temp_dict["repository_url"] = temp_dict.pop("repository_url")
+                data_repo = data_repo_response.json()
+
+            temp_dict_repo = dict((key, data_repo[key]) for key in ('name', 'description', 'svn_url'))
+
+            combined_dict = {**temp_dict, **temp_dict_repo}
+            rand_issue = Issue(**combined_dict)
+
+            return render_template("randomissue.html", rand_issue=rand_issue)
     else:
         return render_template("github.html")

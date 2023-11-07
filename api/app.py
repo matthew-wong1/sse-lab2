@@ -224,7 +224,8 @@ def github():
                 if (keyword):
                     keyword += "+"
                 language = request.form.get("language")
-                url = "https://api.github.com/search/issues?q={keyword}language:{language}+archived:false+state:open+no:assignee+is:public+label:bug".format(keyword=keyword, language=language)
+                date = request.form.get("date")
+                url = "https://api.github.com/search/issues?q={keyword}language:{language}+date:>={date}+archived:false+state:open+no:assignee+is:public+label:bug".format(keyword=keyword, date=date, language=language)
                 print(url)
                 response = requests.get(url)
                 if response.status_code == 200:

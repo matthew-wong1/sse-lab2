@@ -264,7 +264,7 @@ def github():
                                                       language=language))
 
                 if date:
-                    url += "+date:>={date}&sort:asc".format(date=date)
+                    url += "+created:>={date}&sort:asc".format(date=date)
 
                 print(url)
                 response = requests.get(url)

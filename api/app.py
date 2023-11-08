@@ -1,10 +1,11 @@
-import re
-import requests
 import random
-
-from pydantic import BaseModel
+import re
 from datetime import datetime
+
+import emoji
+import requests
 from flask import Flask, make_response, redirect, render_template, request
+from pydantic import BaseModel
 from ua_parser import user_agent_parser
 
 app = Flask(__name__)
@@ -166,40 +167,52 @@ def github():
         if 'findUser' in request.form:
             try:
                 username = request.form.get("username")
-                url = "https://api.github.com/users/{username}/repos".format(username = username)
+                url = ("https://api.github.com/users/{username}/repos"
+                       .format(username=username))
                 query_parameters = {
-                    "sort":"updated",
-                    "direction":"desc",
-                    "per_page" : 100
+                    "sort": "updated",
+                    "direction": "desc",
+                    "per_page": 100
                 }
                 response = requests.get(url, params=query_parameters)
-                data = response.json()  # data returned is a list of ‘repository’ entities
+                # data returned is a list of ‘repository’ entities
+                data = response.json()
                 info_list = []
                 repo_urls = []
                 repos_list = []
                 for i in data:
-                    temp_dict = dict((key, i[key]) for key in ('name', 'created_at','html_url','updated_at','visibility','forks','watchers'))
+                    temp_dict = dict((key, i[key]) for key in ('name',
+                                                               'created_at',
+                                                               'html_url',
+                                                               'updated_at',
+                                                               'visibility',
+                                                               'forks',
+                                                               'watchers'))
                     temp_dict["repo_name"] = temp_dict.pop("name")
                     info_list.append(temp_dict)
-                    repo_urls.append("https://api.github.com/repos/{username}/".format(username=username)+i["name"] + "/commits")
+                    repo_urls.append("https://api.github.com/repos/{username}/"
+                                     .format(username=username)+i["name"]
+                                     + "/commits")
                 for repo_url in repo_urls:
                     data_temp = requests.get(repo_url).json()
                     try:
                         commit = data_temp[0]
                         commit_details = commit["commit"]["committer"]
-                        temp_dict = dict((key, commit_details[key]) for key in ('name','date'))
+                        temp_dict = dict((key, commit_details[key])
+                                         for key in ('name', 'date'))
                         temp_dict["sha"] = commit["sha"]
                         temp_dict['message'] = commit["commit"]["message"]
                         repos_list.append(temp_dict)
-                    except:
+                    except Exception as e:
+                        print(e)
                         repos_list.append({"name": "",
-                                            "date": "1990-01-01T00:00:00Z",
-                                            "message": "",
-                                            "sha": ""})
+                                           "date": "1990-01-01T00:00:00Z",
+                                           "message": "",
+                                           "sha": ""})
                         continue
 
                     combined_list = []
-                    for dict1, dict2 in zip(info_list,repos_list):
+                    for dict1, dict2 in zip(info_list, repos_list):
                         combined_list.append({**dict1, **dict2})
 
                     class Repo(BaseModel):
@@ -220,8 +233,11 @@ def github():
                         repo = Repo(**i)
                         class_list.append(repo)
 
-                return render_template("githubresponse.html", username = username, repos=class_list)
-            except:
+                return render_template("githubresponse.html",
+                                       username=username,
+                                       repos=class_list)
+            except Exception as e:
+                print(e)
                 return render_template("errorgithub.html")
 
         elif 'findIssue' in request.form:
@@ -236,37 +252,75 @@ def github():
                     svn_url: str
 
                 keyword = request.form.get("keyword")
-                if (keyword):
+                if keyword:
                     keyword += "+"
                 language = request.form.get("language")
-                url = "https://api.github.com/search/issues?q={keyword}language:{language}+archived:false+state:open+no:assignee+is:public+label:bug&per_page=100".format(keyword=keyword, language=language)
+                date = request.form.get("date")
+
+                url = (("https://api.github.com/search/issues?" +
+                        "per_page=100&q={keyword}language:{language}+" +
+                        "archived:false+state:open+no:assignee+" +
+                        "is:public+label:bug").format(keyword=keyword,
+                                                      language=language))
+
+                if date:
+                    url += "+date:>={date}&sort:asc".format(date=date)
+
                 print(url)
                 response = requests.get(url)
                 if response.status_code == 200:
                     data_issues = response.json()
 
+                # calculate a random index because api returns max 1000 results
                 issue_count = data_issues['total_count']
+                if issue_count > 1000:
+                    issue_count = 1000
+
                 rand_index = random.randint(0, issue_count - 1)
-                # calculate which page rand_index is on
-                page_number = rand_index // 100 #floor division
+                # calculate which page rand_index is on (floor division)
+                page_number = rand_index // 100
                 page_index = rand_index % 100
+                print(rand_index)
+                print(page_number)
+                print(page_index)
 
                 url += "&page={page_number}".format(page_number=page_number)
-                rand_issue = data_issues['items'][page_index]
 
-                temp_dict = dict((key, rand_issue[key]) for key in ('html_url', 'repository_url', 'title', 'updated_at', 'created_at'))
+                rand_issue_response = requests.get(url)
+                if rand_issue_response.status_code == 200:
+                    rand_issue = rand_issue_response.json()
+                rand_issue = rand_issue['items'][page_index]
+
+                temp_dict = (
+                    dict((key, rand_issue[key]) for key in ('html_url',
+                                                            'repository_url',
+                                                            'title',
+                                                            'updated_at',
+                                                            'created_at')))
                 data_repo_response = requests.get(temp_dict['repository_url'])
                 if data_repo_response.status_code == 200:
-                    temp_dict["repository_url"] = temp_dict.pop("repository_url")
+                    temp_dict["repository_url"] = (
+                        temp_dict.pop("repository_url"))
                     data_repo = data_repo_response.json()
 
-                temp_dict_repo = dict((key, data_repo[key]) for key in ('name', 'description', 'svn_url'))
+                temp_dict_repo = (
+                    dict((key, data_repo[key]) for key in ('name',
+                                                           'description',
+                                                           'svn_url')))
 
                 combined_dict = {**temp_dict, **temp_dict_repo}
+                combined_dict['description'] = (
+                    emoji.replace_emoji(combined_dict['description'],
+                                        replace=''))
+                combined_dict['title'] = (
+                    emoji.replace_emoji(combined_dict['title'], replace=''))
                 rand_issue = Issue(**combined_dict)
 
-                return render_template("randomissue.html", rand_issue=rand_issue)
-            except:
+                return render_template("randomissue.html",
+                                       rand_issue=rand_issue)
+            except Exception as e:
+                print(e)
+
                 return render_template("errorgithub.html")
     else:
         return render_template("github.html")
